@@ -91,16 +91,15 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col justify-center py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="sm:mx-auto sm:w-full sm:max-w-md animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex justify-center">
-          <div className="h-16 w-16 bg-blue-100 dark:bg-blue-900/50 rounded-2xl rotate-12 flex items-center justify-center shadow-lg transform hover:rotate-0 transition-transform cursor-pointer">
-            <ShieldAlert className="h-10 w-10 text-blue-600 dark:text-blue-400 -rotate-12" />
+          <div className="h-16 w-16 bg-blue-100 dark:bg-blue-900/50 rounded-2xl flex items-center justify-center shadow-lg">
+            <img src="/safeevac-192.png" alt="SafeEvac Logo" className="h-12 w-12 rounded-lg" />
           </div>
         </div>
         <h2 className="mt-8 text-center text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-          {isRegistering ? 'Create Account' : 'Welcome Back'}
+          {isRegistering ? 'Create Account' : 'SafeEvac'}
         </h2>
         <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-400">
           Your AI disaster response assistant.
-          <span className="block mt-1 text-[10px] font-bold text-blue-500 uppercase tracking-[0.2em]">Version 2.0 (Cloud Connected)</span>
         </p>
       </div>
 
@@ -139,7 +138,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="block w-full px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 dark:text-white rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder-slate-400"
-                  placeholder="John Doe"
+                  placeholder="Enter username"
                 />
               </div>
             )}
@@ -156,7 +155,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="block w-full px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 dark:text-white rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder-slate-400"
-                placeholder="name@example.com"
+                placeholder="Enter email"
               />
             </div>
 
@@ -172,7 +171,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="block w-full px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 dark:text-white rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder-slate-400"
-                placeholder="••••••••"
+                placeholder="Enter password"
               />
             </div>
 
@@ -180,7 +179,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
               type="submit"
               className="w-full mt-2 flex justify-center py-4 px-4 border border-transparent rounded-2xl shadow-lg text-sm font-bold text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all active:scale-95"
             >
-              {isRegistering ? 'Create Account' : 'Sign In (Latest Build)'}
+              {isRegistering ? 'Create Account' : 'Sign In'}
             </button>
           </form>
 
