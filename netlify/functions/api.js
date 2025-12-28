@@ -125,28 +125,95 @@ router.get('/shelters', async (req, res) => {
     }
 });
 
+// SOS Alert Route
 router.post('/sos', async (req, res) => {
-    const { email, location, locationName } = req.body;
+    console.log("SOS Alert Triggered");
     try {
+        const { email, location } = req.body;
+
         const user = await User.findOne({ email });
-        if (!user || !user.emergencyEmail) return res.status(404).json({ message: 'Emergency contact not set' });
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const targetEmails = [];
+        if (user.emergencyEmail1) targetEmails.push(user.emergencyEmail1);
+        if (user.emergencyEmail2) targetEmails.push(user.emergencyEmail2);
+
+        if (targetEmails.length === 0) {
+            return res.status(400).json({ message: 'Emergency contact not set. Please update your profile.' });
+        }
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',
-            auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
         });
 
-        const mapLink = `https://www.google.com/maps?q=${location.lat},${location.lng}`;
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: user.emergencyEmail,
-            subject: `🚨 SOS ALERT: ${user.name} needs help!`,
-            text: `EMERGENCY ALERT\n\n${user.name} has triggered an SOS.\nLast known location: ${locationName || 'Unknown'}\nMap Link: ${mapLink}`
-        });
+        // Handle location string properly (extract link if possible)
+        const mapLink = location.includes('http')
+            ? location.split('Link: ')[1] || location
+            : `https://www.google.com/maps?q=${location}`;
 
-        res.json({ message: 'SOS alert sent to your emergency contact!' });
+        const mailOptions = {
+            from: `SafeEvac Alert <${process.env.EMAIL_USER}>`,
+            to: targetEmails.join(', '),
+            subject: '🚨 SOS ALERT! SafeEvac User Needs Help',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+                    <div style="background-color: #dc2626; color: white; padding: 20px; border-radius: 10px 10px 0 0; text-align: center;">
+                        <h1 style="margin: 0; font-size: 24px;">🚨 EMERGENCY SOS ALERT</h1>
+                    </div>
+                    
+                    <div style="background-color: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
+                            <strong>${user.name}</strong> has triggered an emergency SOS alert and needs immediate assistance.
+                        </p>
+                        
+                        <div style="background-color: #fef2f2; border-left: 4px solid #dc2626; padding: 15px; margin: 20px 0;">
+                            <p style="margin: 0; color: #991b1b; font-weight: bold;">⏰ Alert Time:</p>
+                            <p style="margin: 5px 0 0 0; color: #333;">${new Date().toLocaleString()}</p>
+                        </div>
+                        
+                        <div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0;">
+                            <p style="margin: 0; color: #1e40af; font-weight: bold;">📍 Current Location:</p>
+                            <p style="margin: 5px 0 0 0; color: #333;">${location}</p>
+                        </div>
+                        
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="${mapLink}" 
+                               style="display: inline-block; background-color: #2563eb; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                                📍 View Location on Google Maps
+                            </a>
+                        </div>
+                        
+                        <div style="background-color: #fef9c3; border-left: 4px solid #eab308; padding: 15px; margin: 20px 0;">
+                            <p style="margin: 0; color: #854d0e; font-weight: bold;">⚠️ What to do:</p>
+                            <ul style="margin: 10px 0 0 0; padding-left: 20px; color: #333;">
+                                <li>Try to contact ${user.name} immediately</li>
+                                <li>Check their location using the map link above</li>
+                                <li>If you cannot reach them, contact local emergency services</li>
+                                <li>Share their location with authorities if needed</li>
+                            </ul>
+                        </div>
+                        
+                        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+                        
+                        <p style="font-size: 12px; color: #6b7280; text-align: center; margin: 0;">
+                            This is an automated emergency alert from SafeEvac.<br>
+                            You are receiving this because you are listed as an emergency contact.
+                        </p>
+                    </div>
+                </div>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.json({ message: `SOS Alert sent to ${targetEmails.join(', ')}` });
+
     } catch (error) {
-        res.status(500).json({ message: 'Failed to send SOS' });
+        console.error("SOS Error:", error);
+        res.status(500).json({ message: 'Failed to send SOS', error: error.message });
     }
 });
 
