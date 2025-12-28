@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Copy of SafeEvac1",
+  "description": "AI-Powered GPS Evacuation routes and Shelter locator to guide people during disasters.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

@@ -1,0 +1,78 @@
+functionsDirectory = "C:\\Users\\DELL\\Downloads\\safest-main (1)\\safest-main\\netlify\\functions"
+functionsDirectoryOrigin = "default"
+headersOrigin = "config"
+redirectsOrigin = "config"
+plugins = []
+
+[build]
+publish = "C:\\Users\\DELL\\Downloads\\safest-main (1)\\safest-main\\dist"
+publishOrigin = "ui"
+commandOrigin = "ui"
+command = "npm run build"
+functions = "C:\\Users\\DELL\\Downloads\\safest-main (1)\\safest-main\\netlify\\functions"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[functions]
+
+[functions."*"]
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+X-Frame-Options = "DENY"
+X-XSS-Protection = "1; mode=block"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "no-referrer-when-downgrade"
+Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+[[headers]]
+for = "/manifest.json"
+
+[headers.values]
+Content-Type = "application/manifest+json"
+Cache-Control = "no-cache"
+
+[[headers]]
+for = "/sw.js"
+
+[headers.values]
+Cache-Control = "no-cache, no-store, must-revalidate"
+Content-Type = "application/javascript"
+
+[[redirects]]
+from = "/api/*"
+to = "/.netlify/functions/api/:splat"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
